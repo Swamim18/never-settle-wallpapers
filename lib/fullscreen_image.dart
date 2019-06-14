@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallpaper/wallpaper.dart';
+import 'package:transparent_image/transparent_image.dart';
+
+const String _appTitle = "Never Settle";
 
 class FullScreenImagePage extends StatefulWidget {
   final String imgPath;
@@ -11,9 +14,12 @@ class FullScreenImagePage extends StatefulWidget {
   }
 }
 
+
 class _FullScreenImagePageState extends State<FullScreenImagePage> {
+  final scaffoldKey = new GlobalKey<ScaffoldState>();
   String result = "Waiting to set wallpaper";
   String imgPath;
+
   @override
   void initState() {
     imgPath = widget.imgPath;
@@ -28,6 +34,10 @@ class _FullScreenImagePageState extends State<FullScreenImagePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      key: scaffoldKey,
+      appBar: AppBar(
+            title: Text(_appTitle),
+          ),
       body: new SizedBox.expand(
         child: new Container(
           decoration: new BoxDecoration(gradient: backGroundGradient),
@@ -37,43 +47,45 @@ class _FullScreenImagePageState extends State<FullScreenImagePage> {
                 child: new Hero(
                   tag: imgPath,
                   child: Column(children: [
-                    new Image.network(
-                      imgPath,
-                      height: MediaQuery.of(context).size.height - 50,
-                      width: MediaQuery.of(context).size.width - 50,
-                    ),
-                    RaisedButton(
+                    Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Center( child: CircularProgressIndicator()),
+                          Center(
+                            child: FadeInImage.memoryNetwork(
+                              height: MediaQuery.of(context).size.height - 130,
+                              placeholder: kTransparentImage,
+                              image: imgPath,
+                            ),
+                          ),
+                        ],
+                      ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(child:FlatButton(
+                          color: Colors.teal,
                       onPressed: () async {
-                        String res;
-                        res = await Wallpaper.homeScreen(imgPath);
+                        _showSnackBar(result);
+                        String res = await Wallpaper.homeScreen(imgPath);
                         if (!mounted) return;
                         setState(() {
-                          result = res.toString();
+                          result = res;
+                          _showSnackBar(result);
                         });
                       },
-                      child: Text("Set as wallpaper"),
-                    ),
-                  ]),
-                ),
-              ),
-              new Align(
-                alignment: Alignment.topCenter,
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    new AppBar(
-                      elevation: 0.0,
-                      backgroundColor: Colors.transparent,
-                      leading: new IconButton(
-                        icon: new Icon(
-                          Icons.close,
-                          color: Colors.black,
-                        ),
-                        onPressed: () => Navigator.of(context).pop(),
-                      ),
+                      child: Text("Set as wallpaper", style: TextStyle(color: Colors.white),),
+                    )),
+                    Expanded(child:FlatButton(
+                      color: Colors.teal,
+                      onPressed: (){
+                        // TODO: implement this to download
+                      },
+                      child: Text("Download wallpaper", style: TextStyle(color: Colors.white)),
+                    ))    
+                    
+                      ],
                     )
-                  ],
+                  ]),
                 ),
               ),
             ],
@@ -81,5 +93,10 @@ class _FullScreenImagePageState extends State<FullScreenImagePage> {
         ),
       ),
     );
+  }
+   _showSnackBar(String text,
+      {Duration duration = const Duration(seconds: 1, milliseconds: 500)}) {
+    return scaffoldKey.currentState.showSnackBar(
+        new SnackBar(content: new Text(text), duration: duration));
   }
 }
