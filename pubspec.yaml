@@ -1,5 +1,5 @@
-name: gamify_fcs
-description: A flutter application to gamify the FCS classes.
+name: never_settle
+description: A flutter application for a new world of wallpapers.
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -11,7 +11,7 @@ description: A flutter application to gamify the FCS classes.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 2.0.0+2
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -24,8 +24,7 @@ dependencies:
   flutter_dotenv: ^2.0.1
   url_launcher: ^5.0.3
   transparent_image: ^1.0.0
-  dio: ^2.1.7
-  path_provider: ^1.1.0
+  image_picker_saver: ^0.3.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
