@@ -5,9 +5,9 @@ import './drawer_manager.dart';
 
 const String _appTitle = "Never Settle";
 
-main(){
+main() {
   return runApp(MyApp());
-} 
+}
 
 class MyApp extends StatefulWidget {
   @override
