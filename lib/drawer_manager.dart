@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import './search_page_manager.dart';
+import './categories.dart';
+
 class DrawerManager extends StatefulWidget {
   final Function _changeThemeStatus;
   final bool _darkThemeEnabled;
@@ -16,11 +19,40 @@ class _DrawerManagerState extends State<DrawerManager> {
   Function _changeThemeStatus;
   bool _darkThemeEnabled;
 
+  final TextEditingController _searchController = new TextEditingController();
+
   @override
   void initState() {
     _changeThemeStatus = widget._changeThemeStatus;
     _darkThemeEnabled = widget._darkThemeEnabled;
     super.initState();
+  }
+
+  void _onSearchPressed() async{
+    FocusScope.of(context).requestFocus(new FocusNode());
+    if(_searchController.text.isNotEmpty){
+    String searchKeywords = _searchController.text;
+      await Navigator.push(context,
+      new MaterialPageRoute(
+        builder: (context){
+          return SearchPageManager(searchKeyWords: searchKeywords, method: 'search',);
+        }
+      )
+      );
+
+    }
+    else
+      print("empty");
+  }
+
+  void _onCategoriesPressed() async{
+    await Navigator.push(context,
+      new MaterialPageRoute(
+        builder: (context){
+          return Categories();
+        }
+      )
+      );
   }
 
   @override
@@ -58,6 +90,26 @@ class _DrawerManagerState extends State<DrawerManager> {
                 _changeThemeStatus();
               },
             ),
+          ),
+          ListTile(
+            leading: CircleAvatar(child: Icon(Icons.search)),
+            title: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Search wallpapers',
+              ),
+              enableInteractiveSelection: true,
+              textInputAction: TextInputAction.search,
+              onEditingComplete: (){
+                _onSearchPressed();
+              },
+            ),
+          ),
+          ListTile(
+            leading: CircleAvatar(child: Icon(Icons.category),),
+            title: Text("Categories"),
+            onTap: () => _onCategoriesPressed(),
           )
         ],
       ),
